@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const UserService = {
+const CabinService = {
 
-    getUsers: async () => {
+    getCabins: async () => {
 
         return await axios.get("http://localhost:8000/users")
             .then(res => {
@@ -13,7 +13,7 @@ const UserService = {
             })
     },
 
-    createUser: async (data) => {
+    createCabin: async (data) => {
         return await axios.post("http://localhost:8000/upload", data)
             .then(res => {
                 return res.data;
@@ -24,4 +24,4 @@ const UserService = {
     }
 }
 
-export default UserService;
+export default CabinService;

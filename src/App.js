@@ -1,24 +1,18 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import UserService from './services/UserService';
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress, TextField } from '@mui/material';
-import UserCard from './components/UserCard'
-import {set, useForm} from "react-hook-form";
+import CabinService from './services/CabinService';
+import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, LinearProgress, TextField, Typography } from '@mui/material';
+import CabinCard from './components/CabinCard'
+import {useForm} from "react-hook-form";
 
 function App() {
 
-  const {register, handleSubmit, formState: {errors}, reset} = useForm();
-
-  const [users, setUsers] = useState([])
-
+  const {register, handleSubmit, reset} = useForm();
+  const [cabins, setCabins] = useState([])
   const [open, setOpen] = useState(false);
-
   const [file, setFile] = useState(null);
-
-  const [userCreated, setUserCreated] = useState(false)
-
+  const [cabinCreated, setCabinCreated] = useState(false)
   const [loading, setLoading] = useState(false)
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,8 +23,8 @@ function App() {
   };
 
   useEffect(() => {
-    UserService.getUsers().then((users) => setUsers(users))
-  }, [userCreated])
+    CabinService.getCabins().then((cabins) => setCabins(cabins))
+  }, [cabinCreated])
 
   const changeFile = (event) => {
     setFile(event.target.files[0]);
@@ -43,24 +37,28 @@ function App() {
     formData.append('name', data.name);
     formData.append('image', file);
 
-    UserService.createUser(formData).then(() => {
+    CabinService.createCabin(formData).then(() => {
       setLoading(false)
       handleClose()
       reset()
       setFile(null)
-      setUserCreated(!userCreated)
+      setCabinCreated(!cabinCreated)
     })
     }
   }
 
   return (
-    <Box>
-      <Grid sx={{padding: "40px 10px"}} container spacing={2}>
-        {users.length > 0 ? users.map((user) => {
-          return <Grid key={user.id}> <UserCard props={user} /> </Grid>
-        }) : <h2>No users</h2>}
-      </Grid>
-      <Button variant='contained' onClick={handleClickOpen}>Add user</Button>
+    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", padding: "50px"}}>
+      <Typography align="center" variant="h4">Cabins</Typography>
+      <Box>
+        <Grid sx={{padding: "40px 10px"}} container spacing={2} alignItems="center" justifyContent="center">
+          {cabins.length > 0 ? cabins.map((cabin) => {
+            return <Grid item key={cabin.id}> <CabinCard props={cabin}/> </Grid>}) : <h2>No cabins</h2>}
+        </Grid>
+      </Box>
+      <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <Button variant='contained' onClick={handleClickOpen}>Add cabin</Button>
+      </Box>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -68,7 +66,7 @@ function App() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle >
-          Add user
+          Add cabin
         </DialogTitle>
         <DialogContent>
           <form noValidate autoComplete="off" onSubmit={handleSubmit(handleCreate)}>
@@ -84,7 +82,8 @@ function App() {
               type="text"
               fullWidth
           />
-            <Button color="primary" aria-label="upload picture" component="label" sx={{height:"100%", width:"100%", borderRadius: "0px", paddingTop: "10px"}}>
+            <Button color="primary" aria-label="upload picture" component="label" 
+              sx={{height:"100%", width:"100%", borderRadius: "0px", paddingTop: "10px"}}>
               <input hidden accept="image/*" type="file" onChange={(e) => changeFile(e)} />
               Select an image
             </Button>
