@@ -20,6 +20,7 @@ function App() {
 
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
   useEffect(() => {
@@ -35,6 +36,8 @@ function App() {
       setLoading(true)
     const formData = new FormData()
     formData.append('name', data.name);
+    formData.append('price', data.price);
+    formData.append('beds', data.beds);
     formData.append('image', file);
 
     CabinService.createCabin(formData).then(() => {
@@ -65,31 +68,56 @@ function App() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle >
+        <DialogTitle align="center" >
           Add cabin
         </DialogTitle>
         <DialogContent>
           <form noValidate autoComplete="off" onSubmit={handleSubmit(handleCreate)}>
             <TextField
+              {...register("name", {required: true })}
               autoFocus
+              label="Name"
               variant="outlined"
-              {...register(
-                "name",
-                {required: 'Name required'})}
-              margin="dense"
-              id="name"
-              label="name"
-              type="text"
               fullWidth
-          />
+              type="text"
+              margin="dense"
+            />
+            <TextField
+              {...register('price', {required: true, valueAsNumber: true })}
+              label="Price"
+              variant="outlined"
+              fullWidth
+              margin="dense"
+              type="number"
+              inputProps={{
+                step: 1,
+                min: 0,
+              }}
+            />
+            <TextField
+              {...register('beds', {required: true, valueAsNumber: true })}
+              label="Beds"
+              variant="outlined"
+              fullWidth
+              margin="dense"
+              type="number"
+              inputProps={{
+                step: 1,
+                min: 0,
+              }}
+            />
             <Button color="primary" aria-label="upload picture" component="label" 
               sx={{height:"100%", width:"100%", borderRadius: "0px", paddingTop: "10px"}}>
               <input hidden accept="image/*" type="file" onChange={(e) => changeFile(e)} />
               Select an image
             </Button>
-            <Box sx={{paddingTop: "10px"}}>
-              <Button variant="outlined" onClick={handleClose}>Cancel</Button>
-              <Button variant="contained" type="submit">Create</Button>
+            <Box sx={{display: "flex", paddingTop: "10px"}}>
+              <Box sx={{display: "flex", flexGrow: "1"}} >
+                <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+              </Box>
+              <Box sx={{display: "flex", flexGrow: "1", justifyContent: "right"}} >
+                <Button variant="contained" type="submit">Create</Button>
+              </Box>
             </Box>
           </form>
           <Box sx={{paddingTop:"10px"}}>
