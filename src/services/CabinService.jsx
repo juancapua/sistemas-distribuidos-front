@@ -4,7 +4,7 @@ const CabinService = {
 
     getCabins: async () => {
 
-        return await axios.get("http://44.212.18.34:3000/cabins")
+        return await axios.get("https://89btbpgxl6.execute-api.us-east-1.amazonaws.com/cabins")
             .then(res => {
                 return res.data;
             })
@@ -14,7 +14,7 @@ const CabinService = {
     },
 
     createCabin: async (data) => {
-        return await axios.post("http://44.212.18.34:3000/cabins", data)
+        return await axios.post("https://89btbpgxl6.execute-api.us-east-1.amazonaws.com/cabins", data)
             .then(res => {
                 return res.data;
             })
